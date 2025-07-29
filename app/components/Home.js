@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import MovieCard from './MovieCard';
 
@@ -7,24 +6,24 @@ export default function Home() {
   const [shows, setShows] = useState(null);
 
   useEffect(() => {
-    fetch('https://raw.githubusercontent.com/prust/wikipedia-movie-data/master/movies.json')
+    fetch('https://api.tvmaze.com/shows?page=1')
       .then(res => res.json())
       .then(data => setShows(data))
-      .catch(err => console.error('Error:', err));
+      .catch(err => console.error('Error fetching data:', err));
   }, []);
 
-  if (!shows) return <div>Loading watchlist...</div>;
+  if (!shows) return <div>Loading movies...</div>;
 
   return (
-    <div style={{ padding: '2rem', background: '#111', minHeight: '100vh' }}>
-      <h1 style={{ color: 'white', marginBottom: '2rem' }}>My Watchlist</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-        {shows.map(({ show }) => (
+    <div>
+      <h1 style={{ color: 'black', marginBottom: '2rem' }}>Recommended Shows for You</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', padding: '2rem' }}>
+        {shows.map(show => (
           <MovieCard
             key={show.id}
             title={show.name}
-            poster={show.image?.medium}
-            year={show.premiered?.split('-')[0]}
+            poster={show.image?.medium || ''}
+            year={show.premiered ? show.premiered.split('-')[0] : 'N/A'}
           />
         ))}
       </div>
